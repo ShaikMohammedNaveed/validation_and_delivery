@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request
-from lwc_validator_online import download_and_validate_notebook
+import os
 
 app = Flask(__name__)
+
+from lwc_validator_online import download_and_validate_notebook
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -13,4 +15,5 @@ def index():
     return render_template('index.html', output=output)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.getenv("PORT", 5000))  # Render assigns PORT
+    app.run(debug=False, host='0.0.0.0', port=port)
