@@ -6,3 +6,12 @@ __pycache__/lwc_validator_online.cpython-313.pyc
 __pycache__/lwc_validator.cpython-313.pyc
 constants.py
 credentials.json
+.env
+delivery_workflow.zip
+tmpbi99q4dn.json
+tmpizdfopn2.json
+moved_files.log
+__pycache__/app.cpython-313.pyc
+*.pyc
+*.zip
+*.ipynb

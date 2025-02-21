@@ -1,0 +1,25 @@
+.apex-del-container {
+    padding: 20px;
+}
+
+.light-theme .apex-del-container {
+    background-color: #f4f4f9;
+}
+
+.dark-theme .apex-del-container {
+    background-color: #1e1e2f;
+}
+
+.apex-del-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.apex-del-text {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.dark-theme .apex-del-text {
+    color: #ccc;
+}

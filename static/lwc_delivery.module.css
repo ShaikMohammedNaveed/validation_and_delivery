@@ -1,0 +1,25 @@
+.lwc-del-container {
+    padding: 20px;
+}
+
+.light-theme .lwc-del-container {
+    background-color: #f4f4f9;
+}
+
+.dark-theme .lwc-del-container {
+    background-color: #1e1e2f;
+}
+
+.lwc-del-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.lwc-del-text {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.dark-theme .lwc-del-text {
+    color: #ccc;
+}

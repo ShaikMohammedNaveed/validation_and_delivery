@@ -7,9 +7,13 @@ from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from googleapiclient.http import MediaIoBaseDownload
 import nbformat
-from lwc_validator import NotebookValidator
+from lwc_validator.lwc_validator import NotebookValidator
+from dotenv import load_dotenv
 
-def download_and_validate_notebook(notebook_link: str) -> str:
+# Load environment variables from .env file (for local development)
+load_dotenv()
+
+def validate_lwc_notebook(notebook_link: str) -> str:
     output_buffer = StringIO()
 
     try:
@@ -21,9 +25,8 @@ def download_and_validate_notebook(notebook_link: str) -> str:
             raise ValueError("Invalid notebook link format. Could not extract file ID.")
         file_id = file_id_match.group(1)
 
-        # Load credentials from environment variable
+        # Load credentials
         credentials_json = os.getenv("GOOGLE_CREDENTIALS")
-        print(credentials_json)
         if not credentials_json:
             raise ValueError("Google credentials not found in environment variables")
         creds = service_account.Credentials.from_service_account_info(
@@ -32,7 +35,7 @@ def download_and_validate_notebook(notebook_link: str) -> str:
         )
         drive_service = build('drive', 'v3', credentials=creds)
 
-        # Verify file access
+        # Verify access
         try:
             drive_service.files().get(fileId=file_id).execute()
         except Exception as e:
@@ -64,10 +67,10 @@ def download_and_validate_notebook(notebook_link: str) -> str:
         validator.validate_structure()
 
         if not validator.errors:
-            output_buffer.write(f"✅ {file_id}.ipynb is valid.\n")
+            output_buffer.write(f"✅ {file_id}.ipynb is valid LWC notebook.\n")
             output_buffer.write('-' * 40 + "\n")
         else:
-            output_buffer.write(f"❌ Errors in {file_id}.ipynb:\n")
+            output_buffer.write(f"❌ Errors in LWC notebook {file_id}.ipynb:\n")
             for error in validator.errors:
                 output_buffer.write(f"- {error}\n" + "-" * 40 + "\n")
 

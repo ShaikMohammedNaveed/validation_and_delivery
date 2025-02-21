@@ -3,4 +3,11 @@ google-auth-oauthlib
 google-auth-httplib2
 google-api-python-client
 nbformat
-gunicorn  # Recommended for Render
+gunicorn
+python-dotenv
+pydantic
+pydantic-settings
+gspread
+gspread-formatting
+fuzzywuzzy
+python-Levenshtein

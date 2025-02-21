@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebook Delivery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='delivery.module.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container-fluid delivery-container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 delivery-sidebar">
+                <h2 class="delivery-title">Notebook Delivery</h2>
+                <p class="delivery-subtitle">Deliver LWC or Apex notebooks efficiently.</p>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary mb-3 delivery-btn">Back to Home</a>
+            </div>
+            <!-- Main Content -->
+            <div class="col-md-9 delivery-main">
+                <div class="delivery-card">
+                    <div class="delivery-card-header">
+                        <h4>Deliver Notebook</h4>
+                    </div>
+                    <div class="delivery-card-body">
+                        <form id="deliveryForm" method="POST" enctype="multipart/form-data" novalidate>
+                            <div class="delivery-form-group">
+                                <label for="module" class="delivery-form-label">Choose Notebook Type:</label>
+                                <select class="form-select delivery-input" id="module" name="module" onchange="toggleFields()" required>
+                                    <option value="">Select Type</option>
+                                    <option value="lwc">LWC</option>
+                                    <option value="apex">Apex</option>
+                                </select>
+                            </div>
+                            <div id="deliveryFields" class="delivery-fields" style="display: none;">
+                                <div class="delivery-form-group">
+                                    <label for="process_type" class="delivery-form-label">Process Type:</label>
+                                    <select class="form-select delivery-input" id="process_type" name="process_type" onchange="toggleInputFields()" required>
+                                        <option value="drive">Drive Folder</option>
+                                        <option value="sheet">Google Sheet</option>
+                                        <option value="json">JSON File</option>
+                                    </select>
+                                </div>
+                                <div id="driveInput" class="delivery-input-group">
+                                    <label for="input_data" class="delivery-form-label">Drive Folder Link:</label>
+                                    <input type="url" class="form-control delivery-input" id="input_data" name="input_data"
+                                           placeholder="https://drive.google.com/drive/folders/..." required>
+                                    <div class="delivery-invalid-feedback">
+                                        Please enter a valid Google Drive folder link.
+                                    </div>
+                                </div>
+                                <div id="sheetInput" class="delivery-input-group" style="display: none;">
+                                    <label for="input_data" class="delivery-form-label">Google Sheet Link:</label>
+                                    <input type="url" class="form-control delivery-input" id="input_data" name="input_data"
+                                           placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                                    <div class="delivery-invalid-feedback">
+                                        Please enter a valid Google Sheets link.
+                                    </div>
+                                </div>
+                                <div id="jsonInput" class="delivery-input-group" style="display: none;">
+                                    <label for="json_file" class="delivery-form-label">Upload JSON File:</label>
+                                    <input type="file" class="form-control delivery-input" id="json_file" name="json_file" accept=".json" required>
+                                    <div class="delivery-invalid-feedback">
+                                        Please upload a valid .json file.
+                                    </div>
+                                </div>
+                                <div class="delivery-form-group">
+                                    <label for="delivery_type" class="delivery-form-label">Delivery Type:</label>
+                                    <select class="form-select delivery-input" id="delivery_type" name="delivery_type" required>
+                                        <option value="normal">Normal</option>
+                                        <option value="rework">Rework</option>
+                                        <option value="snapshot">Snapshot</option>
+                                    </select>
+                                </div>
+                                <div class="delivery-form-group">
+                                    <label for="emails" class="delivery-form-label">Recipient Emails (comma-separated):</label>
+                                    <input type="text" class="form-control delivery-input" id="emails" name="emails"
+                                           placeholder="email1@example.com, email2@example.com" required>
+                                    <div class="delivery-invalid-feedback">
+                                        Please enter valid email addresses, separated by commas.
+                                    </div>
+                                </div>
+                                <div class="delivery-form-group">
+                                    <label for="batch_name" class="delivery-form-label">Batch Name (for Sheet/JSON):</label>
+                                    <input type="text" class="form-control delivery-input" id="batch_name" name="batch_name"
+                                           placeholder="e.g., batch-2025-02-03">
+                                </div>
+                                <div class="delivery-form-group">
+                                    <label for="validate" class="delivery-form-label">Enable Validation:</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="validate" name="validate" checked>
+                                    </div>
+                                </div>
+                                <div class="delivery-form-group">
+                                    <label class="delivery-form-label">Configuration (Apex or LWC):</label>
+                                    <div id="apexConfig" style="display: none;">
+                                        <input type="text" class="form-control delivery-input mb-2" name="apex_input_sheet_id"
+                                               placeholder="Apex Input Sheet ID (e.g., 1mFUh8Yhhqd3mtT3fJr8qu8gPuGVX8kGJ-UbM_PY3AJQ)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="apex_input_sheet_name"
+                                               placeholder="Apex Sheet Name (e.g., apex_batch)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="apex_task_link_column"
+                                               placeholder="Apex Task Link Column (e.g., colab_task_link)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="apex_output_dir"
+                                               placeholder="Apex Output Dir (e.g., output/apex)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="apex_json_output_dir"
+                                               placeholder="Apex JSON Output Dir (e.g., output/apex/json_files)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="apex_gdrive_dir_folder_id_collabs"
+                                               placeholder="Apex Collab Folder ID (e.g., 1yYbKxZYAY7URNYwmUnuM2BhiJEnY2qjf)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="apex_google_drive_json_folder_id"
+                                               placeholder="Apex JSON Folder ID (e.g., 1yYbKxZYAY7URNYwmUnuM2BhiJEnY2qjf)">
+                                    </div>
+                                    <div id="lwcConfig" style="display: none;">
+                                        <input type="text" class="form-control delivery-input mb-2" name="lwc_input_sheet_id"
+                                               placeholder="LWC Input Sheet ID (e.g., 1XEs_8KeOAkMp5Nk83v1RzncoXdA7NYLWE8op35vJ41A)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="lwc_input_sheet_name"
+                                               placeholder="LWC Sheet Name (e.g., lwc_batch)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="lwc_task_link_column"
+                                               placeholder="LWC Task Link Column (e.g., colab_task_link)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="lwc_output_dir"
+                                               placeholder="LWC Output Dir (e.g., output/lwc)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="lwc_json_output_dir"
+                                               placeholder="LWC JSON Output Dir (e.g., output/lwc/json_files)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="lwc_gdrive_dir_folder_id_collabs"
+                                               placeholder="LWC Collab Folder ID (e.g., 1vKgRppT7Lq9J5QK_Z7VOFWxKLQygTVfn)">
+                                        <input type="text" class="form-control delivery-input mb-2" name="lwc_google_drive_json_folder_id"
+                                               placeholder="LWC JSON Folder ID (e.g., 1vKgRppT7Lq9J5QK_Z7VOFWxKLQygTVfn)">
+                                    </div>
+                                </div>
+                                <div class="delivery-form-group">
+                                    <button type="submit" class="btn delivery-btn delivery-btn-deliver">Deliver</button>
+                                    <button type="button" class="btn delivery-btn delivery-btn-clear-form" onclick="clearForm()">Clear Form</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div id="spinner" class="delivery-spinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span>Delivering...</span>
+                            <div class="delivery-progress">
+                                <div id="progressBar" class="delivery-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        {% if output %}
+                            <div class="delivery-output-section">
+                                <div class="delivery-output-header">
+                                    <h5>Delivery Results</h5>
+                                    <div>
+                                        <button class="btn delivery-btn delivery-btn-toggle" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#outputCollapse"
+                                                aria-expanded="true" aria-controls="outputCollapse">
+                                            Toggle
+                                        </button>
+                                        <button class="btn delivery-btn delivery-btn-download" onclick="downloadOutput()">Download</button>
+                                        <button class="btn delivery-btn delivery-btn-clear-results" onclick="clearResults()">Clear Results</button>
+                                    </div>
+                                </div>
+                                <div class="collapse show" id="outputCollapse">
+                                    <pre class="delivery-output-box">{{ output }}</pre>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="delivery-history-section">
+                            <h5>Delivery History</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span></span>
+                                <button class="btn delivery-btn delivery-btn-clear-history" onclick="clearHistory()">Clear History</button>
+                            </div>
+                            <ul id="historyList" class="delivery-history-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="delivery-theme-toggle" onclick="toggleTheme()">☀️</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const toggle = document.querySelector('.delivery-theme-toggle');
+            if (html.classList.contains('light-theme')) {
+                html.classList.remove('light-theme');
+                html.classList.add('dark-theme');
+                toggle.textContent = '☀️';
+            } else {
+                html.classList.remove('dark-theme');
+                html.classList.add('light-theme');
+                toggle.textContent = '🌙';
+            }
+        }
+
+        function toggleFields() {
+            const module = document.getElementById('module').value;
+            const deliveryFields = document.getElementById('deliveryFields');
+            const apexConfig = document.getElementById('apexConfig');
+            const lwcConfig = document.getElementById('lwcConfig');
+
+            if (module) {
+                deliveryFields.style.display = 'block';
+                apexConfig.style.display = module === 'apex' ? 'block' : 'none';
+                lwcConfig.style.display = module === 'lwc' ? 'block' : 'none';
+            } else {
+                deliveryFields.style.display = 'none';
+                apexConfig.style.display = 'none';
+                lwcConfig.style.display = 'none';
+            }
+            toggleInputFields();  // Ensure input fields are updated when module changes
+        }
+
+        function toggleInputFields() {
+            const processType = document.getElementById('process_type').value;
+            const driveInput = document.getElementById('driveInput');
+            const sheetInput = document.getElementById('sheetInput');
+            const jsonInput = document.getElementById('jsonInput');
+
+            driveInput.style.display = processType === 'drive' ? 'block' : 'none';
+            sheetInput.style.display = processType === 'sheet' ? 'block' : 'none';
+            jsonInput.style.display = processType === 'json' ? 'block' : 'none';
+
+            // Update required attribute for inputs
+            const inputData = document.getElementById('input_data');
+            const jsonFile = document.getElementById('json_file');
+            inputData.required = processType !== 'json';
+            jsonFile.required = processType === 'json';
+            if (processType !== 'json') {
+                inputData.value = '';  // Clear input_data when not needed
+                jsonFile.value = '';   // Clear file input when not needed
+            }
+        }
+
+        document.getElementById('deliveryForm').addEventListener('submit', function(event) {
+            const notebookLink = document.getElementById('input_data');
+            const emailsInput = document.getElementById('emails');
+            const jsonFile = document.getElementById('json_file');
+            const spinner = document.getElementById('spinner');
+            const progressBar = document.getElementById('progressBar');
+            const processType = document.getElementById('process_type').value;
+            console.log('Form submitted with processType:', processType); // Debug log
+
+            // Validate inputs based on process type
+            if (processType === 'drive') {
+                if (!notebookLink.value.match(/^(https?:\/\/drive\.google\.com\/drive\/folders\/[a-zA-Z0-9-_]+)$/)) {
+                    event.preventDefault();
+                    notebookLink.classList.add('is-invalid');
+                    notebookLink.nextElementSibling.textContent = 'Please enter a valid Google Drive folder link (e.g., https://drive.google.com/drive/folders/123).';
+                    return;
+                }
+            } else if (processType === 'sheet') {
+                if (!notebookLink.value.match(/^(https?:\/\/docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9-_]+(?:\/edit.*)?)$/)) {
+                    event.preventDefault();
+                    notebookLink.classList.add('is-invalid');
+                    notebookLink.nextElementSibling.textContent = 'Please enter a valid Google Sheets link (e.g., https://docs.google.com/spreadsheets/d/456).';
+                    return;
+                }
+            } else if (processType === 'json') {
+                if (!jsonFile.files || !jsonFile.files[0] || !jsonFile.files[0].name.endsWith('.json')) {
+                    event.preventDefault();
+                    jsonFile.classList.add('is-invalid');
+                    jsonFile.nextElementSibling.textContent = 'Please upload a valid .json file.';
+                    return;
+                }
+            }
+
+            // Validate emails
+            const emails = emailsInput.value.split(',').map(email => email.trim()).filter(email => email);
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emails.every(email => emailRegex.test(email))) {
+                event.preventDefault();
+                emailsInput.classList.add('is-invalid');
+                emailsInput.nextElementSibling.textContent = 'Please enter valid email addresses, separated by commas.';
+                return;
+            }
+
+            notebookLink.classList.remove('is-invalid');
+            emailsInput.classList.remove('is-invalid');
+            jsonFile.classList.remove('is-invalid');
+            spinner.style.display = 'block';
+            let progress = 0;
+            const source = new EventSource('/progress');  // Use Server-Sent Events for progress
+            source.onmessage = function(event) {
+                progress = parseInt(event.data, 10);
+                progressBar.style.width = `${progress}%`;
+                if (progress >= 100) {
+                    source.close();
+                }
+            };
+
+            addToHistory(notebookLink.value || (jsonFile.files[0] ? jsonFile.files[0].name : ''), document.getElementById('module').value);
+        });
+        function clearForm() {
+            document.getElementById('module').value = '';
+            document.getElementById('process_type').value = 'drive';
+            document.getElementById('input_data').value = '';
+            document.getElementById('delivery_type').value = 'normal';
+            document.getElementById('emails').value = '';
+            document.getElementById('batch_name').value = '';
+            document.getElementById('validate').checked = true;
+            document.getElementById('input_data').classList.remove('is-invalid');
+            document.getElementById('emails').classList.remove('is-invalid');
+            document.getElementById('json_file').classList.remove('is-invalid');
+            document.getElementById('json_file').value = '';  // Clear file input
+            toggleFields();
+            toggleInputFields();
+        }
+
+        function downloadOutput() {
+            const output = document.querySelector('.delivery-output-box')?.textContent;
+            if (output) {
+                const blob = new Blob([output], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${document.getElementById('module').value}_delivery_results.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        function addToHistory(input, module) {
+            const history = JSON.parse(localStorage.getItem('deliveryHistory') || '[]');
+            const entry = { input, timestamp: new Date().toLocaleString(), module: module, delivery_type: document.getElementById('delivery_type').value, process_type: document.getElementById('process_type').value };
+            history.unshift(entry);
+            if (history.length > 10) history.pop();
+            localStorage.setItem('deliveryHistory', JSON.stringify(history));
+            displayHistory();
+        }
+
+        function displayHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            const history = JSON.parse(localStorage.getItem('deliveryHistory') || '[]');
+            history.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'delivery-history-item';
+                li.textContent = `${item.timestamp} (${item.module}, ${item.process_type}, ${item.delivery_type}): ${item.input}`;
+                historyList.appendChild(li);
+            });
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('deliveryHistory');
+            displayHistory();
+        }
+
+        function clearResults() {
+            document.getElementById('outputCollapse').classList.remove('show');
+            document.querySelector('.delivery-output-box').textContent = '';
+        }
+
+        window.onload = function() {
+            toggleFields();
+            toggleInputFields();
+            displayHistory();
+        };
+    </script>
+</body>
+</html>

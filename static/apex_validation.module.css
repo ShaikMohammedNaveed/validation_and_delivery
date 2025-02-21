@@ -1,0 +1,267 @@
+/* Ensure no global styles exist */
+.apex-val-container {
+    padding: 0;
+    min-height: 100vh;
+    background-color: inherit; /* Inherits from body */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.light-theme {
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.dark-theme {
+    background-color: #1a1d2c; /* Deep navy for a professional dark background */
+    color: #ffffff; /* Pure white for maximum readability on dark backgrounds */
+}
+
+.light-theme .apex-val-sidebar {
+    background-color: #fff;
+    padding: 20px;
+    min-height: 100vh;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .apex-val-sidebar {
+    background-color: #2d2d44; /* Dark gray sidebar for contrast */
+    box-shadow: 2px 0 5px rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.apex-val-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: inherit;
+}
+
+.apex-val-subtitle {
+    font-size: 1rem;
+}
+
+.light-theme .apex-val-subtitle {
+    color: #666;
+}
+
+.dark-theme .apex-val-subtitle {
+    color: #a0a0a0; /* Light gray for secondary text, clear on dark background */
+}
+
+.apex-val-main {
+    padding: 20px;
+}
+
+.apex-val-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .apex-val-card {
+    background-color: #fff;
+}
+
+.dark-theme .apex-val-card {
+    background-color: #2d2d44; /* Dark gray card background, matching sidebar */
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.apex-val-card-header {
+    background-color: #007bff; /* Bright blue header for consistency */
+    color: white;
+    border-radius: 10px 10px 0 0;
+    padding: 15px;
+}
+
+.apex-val-card-body {
+    padding: 20px;
+}
+
+.apex-val-form-group {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.apex-val-form-label {
+    font-weight: bold;
+    color: inherit;
+    margin-bottom: 0; /* Remove default margin for flex alignment */
+}
+
+.apex-val-input {
+    background-color: #3b3b5a; /* Darker gray for input, subtle contrast */
+    border: 1px solid #555; /* Darker border for input */
+    color: #ffffff; /* White text for readability */
+    padding: 10px;
+    border-radius: 5px;
+    flex: 1; /* Allow input to grow and shrink with container */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.light-theme .apex-val-input {
+    background-color: #fff;
+    border-color: #ddd;
+    color: #333;
+}
+
+.apex-val-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.apex-val-invalid-feedback {
+    font-size: 0.9rem;
+    color: #e74c3c; /* Bright red for errors, more readable */
+    display: none;
+}
+
+.is-invalid ~ .apex-val-invalid-feedback {
+    display: block;
+}
+
+.apex-val-btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+    font-weight: bold;
+    border: none;
+}
+
+.apex-val-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.apex-val-btn-validate {
+    background-color: #007bff; /* Bright blue for Validate button */
+    color: white;
+    margin-bottom: 0; /* Align with input */
+}
+
+.apex-val-btn-clear-history {
+    background-color: #e74c3c; /* Vibrant red for clear actions */
+    color: white;
+}
+
+.apex-val-btn-clear-results {
+    background-color: #e74c3c; /* Consistent red for clear actions */
+    color: white;
+}
+
+.dark-theme .apex-val-btn-clear-history,
+.dark-theme .apex-val-btn-clear-results {
+    background-color: #c0392b; /* Slightly darker red for dark mode */
+}
+
+.apex-val-spinner {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.apex-val-progress {
+    height: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    background-color: #555; /* Dark gray for progress background */
+}
+
+.apex-val-progress-bar {
+    background-color: #007bff;
+    transition: width 0.5s ease-in-out;
+}
+
+.apex-val-output-section {
+    margin-top: 20px;
+}
+
+.apex-val-output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.apex-val-output-box {
+    background-color: #3b3b5a; /* Darker gray for output, readable contrast */
+    border: 1px solid #555;
+    padding: 15px;
+    border-radius: 5px;
+    max-height: 400px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-family: 'Courier New', Courier, monospace;
+    color: #ffffff; /* White text for readability */
+}
+
+.light-theme .apex-val-output-box {
+    background-color: #f8f9fa;
+    border-color: #ddd;
+    color: #333;
+}
+
+.apex-val-btn-toggle {
+    background-color: #6c757d; /* Neutral gray for toggle button */
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+}
+
+.apex-val-btn-download {
+    background-color: #28a745; /* Green for download, consistent and intuitive */
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.apex-val-history-section {
+    margin-top: 20px;
+}
+
+.apex-val-history-list {
+    list-style: none;
+    padding: 0;
+}
+
+.apex-val-history-item {
+    background-color: #2d2d44; /* Dark gray for history items, consistent with card */
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    font-size: 0.9rem;
+    color: #ffffff; /* White text for readability */
+    border: 1px solid #555;
+}
+
+.light-theme .apex-val-history-item {
+    background-color: #fff;
+    color: #333;
+    border-color: #ddd;
+}
+
+/* Theme Toggle Button */
+.apex-val-theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.apex-val-theme-toggle:hover {
+    background-color: #0056b3;
+}
