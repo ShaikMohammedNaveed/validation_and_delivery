@@ -11,3 +11,4 @@ gspread
 gspread-formatting
 fuzzywuzzy
 python-Levenshtein
+pandas
